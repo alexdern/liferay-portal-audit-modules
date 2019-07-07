@@ -1,0 +1,7 @@
+Bundle-Category: Liferay Audit
+Bundle-Name: liferay-portal-audit-capture-events
+Bundle-SymbolicName: ru.alexdern.liferay.security.audit.events
+Bundle-Version: 1.0-SNAPSHOT
+
+Liferay-Releng-Module-Group-Description:
+Liferay-Releng-Module-Group-Title: Audit

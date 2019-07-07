@@ -1,0 +1,16 @@
+Bundle-Category: Liferay Audit
+Bundle-Name: liferay-portal-audit-rest-transport
+Bundle-SymbolicName: ru.alexdern.liferay.security.audit.transport
+Bundle-Version: 1.0-SNAPSHOT
+Liferay-Releng-Module-Group-Description:
+Liferay-Releng-Module-Group-Title: Audit
+# Let a configuration xml file be generated from the configuration interfaces
+-metatype: *
+-includeresource:\
+    META-INF/lib/httpclient.jar=httpclient-[0-9]*.jar;lib:=true,\
+    META-INF/lib/commons-codec.jar=commons-codec-[0-9]*.jar;lib:=true,\
+    META-INF/lib/httpcore.jar=httpcore-[0-9]*.jar;lib:=true
+
+
+Export-Package: ru.alexdern.liferay.security.audit.transport
+Import-Package: !okhttp3.*,*
