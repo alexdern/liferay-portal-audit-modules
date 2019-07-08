@@ -1,46 +1,38 @@
+<%@ page import="ru.alexdern.liferay.security.model.Search" %>
 <%@ include file="/init.jsp" %>
 
 <p>
 	<b><liferay-ui:message key="auditjournal.caption"/></b>
 </p>
 
-<portlet:actionURL var="searchURL">
-	<portlet:param name="mvcPath" value="/view.jsp" />
-	<portlet:param name="type" value="search" />
-</portlet:actionURL>
+<%
 
-<aui:form action="${searchURL}" method="POST">
+    Search search = new Search();
+%>
+<portlet:actionURL name="searchAction" var="searchUrl" />
+<aui:form action="<%=searchUrl%>" name="fm" method="POST">
 
-	<div class="row">
-		<div class="col-md-8">
-			<aui:input inlineLabel="left" label="" name="keywords"
-					   placeholder="search-entries" size="256" />
-		</div>
+    <aui:model-context bean="<%=search %>" model="<%=Search.class%>" />
 
-		<div class="col-md-4">
-			<aui:button type="submit" value="search" />
-		</div>
-	</div>
+    <h2>Filter</h2>
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            <aui:input label="DateStart" name="dtStart" type="date" cssClass="form-control form-control-sm" />
+        </div>
+        <div class="form-group col-md-2">
+            <aui:input label="DateEnd" name="dtEnd" type="date" cssClass="form-control form-control-sm" />
+        </div>
+        <div class="form-group col-md-2">
+            <aui:input label="login" name="login" type="text" cssClass="form-control form-control-sm" />
+        </div>
+        <div class="form-group col-md-2">
+            <aui:select label="event" name="eventType" cssClass="form-control form-control-sm">
+                <aui:option label="LOGIN" selected="" useModelValue="<%= false %>" />
+                <aui:option label="LOGOUT" selected="" useModelValue="<%= false %>" />
+            </aui:select>
+        </div>
+    </div>
+    <aui:button type="submit" value="search" cssClass="btn btn-sm btn-primary" />
+
 </aui:form>
 
-
-<%
-    List<Student> students = StudentLocalServiceUtil.getStudents();
-%>
-
-<liferay-ui:search-container total="<%=students.size()%>">
-
-    <liferay-ui:search-container-results results="${students}" />
-
-    <liferay-ui:search-container-row className="kwan.org.database.model.Student" modelVar="student">
-
-        <liferay-ui:search-container-column-text property="code" />
-        <liferay-ui:search-container-column-text property="fullName" />
-        <liferay-ui:search-container-column-date property="birthday" />
-        <liferay-ui:search-container-column-text property="address" />
-
-    </liferay-ui:search-container-row>
-
-    <liferay-ui:search-iterator />
-
-</liferay-ui:search-container>

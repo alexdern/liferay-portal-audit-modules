@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class RestClient {
 
+    private static final String DEFAULT_URL = "http://localhost:8081/api/";
     private static final String AUTHORIZATION_TOKEN = "TESTING-KEY-DB194F1DA8D55F8E147D79CF7EEDC25F";
 
     private Retrofit retrofit;
@@ -22,7 +23,7 @@ public class RestClient {
 
     @PostConstruct
     private void init() {
-        retrofit = provideRetrofit("http://10.10.0.10:8080/api/");
+        retrofit = provideRetrofit(DEFAULT_URL);
     }
 
     private Retrofit provideRetrofit(String url) {

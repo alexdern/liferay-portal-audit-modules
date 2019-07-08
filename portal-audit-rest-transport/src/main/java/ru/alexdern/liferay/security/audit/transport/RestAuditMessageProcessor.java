@@ -3,20 +3,15 @@ package ru.alexdern.liferay.security.audit.transport;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.audit.AuditException;
 import com.liferay.portal.kernel.audit.AuditMessage;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.security.audit.AuditMessageProcessor;
 import org.osgi.service.component.annotations.*;
-import ru.alexdern.liferay.security.audit.support.RestClient;
 import ru.alexdern.liferay.security.audit.transport.configuration.RestConfiguration;
 import ru.alexdern.liferay.security.audit.transport.support.AuditEventDto;
 import ru.alexdern.liferay.security.audit.transport.support.HttpClient;
-import ru.alexdern.liferay.security.audit.transport.support.SendCommand;
 
 import java.io.IOException;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Map;
 
 @Component(

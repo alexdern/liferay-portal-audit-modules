@@ -2,6 +2,8 @@
 
 <portlet:actionURL var="saveUrl" name="createEmp" escapeXml="false"></portlet:actionURL>
 
+<b><liferay-ui:message key="liferay7springmvcportlet.currentUser" arguments="${user.firstName}" /></b>
+
 <form:form action="${saveUrl}" method="POST" cssClass="form-horizontal">
     <div class="control-group">
         <label class="control-label">name</label>

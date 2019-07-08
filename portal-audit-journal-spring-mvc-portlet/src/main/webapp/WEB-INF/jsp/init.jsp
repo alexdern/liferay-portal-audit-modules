@@ -4,6 +4,7 @@
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ page import="com.liferay.portal.kernel.util.Constants" %>
 
 <liferay-theme:defineObjects />
 

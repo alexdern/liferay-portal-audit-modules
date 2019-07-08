@@ -1,13 +1,10 @@
 <%@ include file="/WEB-INF/jsp/init.jsp" %>
 
 <portlet:actionURL var="createappntURL">
-    <portlet:param name="_eventId" value="createAppnt" />
-    <portlet:param name="execution" value="" />
+    <portlet:param name="execution" value="save" />
 </portlet:actionURL>
 
-<form:form id="appntForm" modelAttribute="appnt" action="${createappntURL}" method="POST" cssClass="form-horizontal">
-
-    <form:input type="hidden" id="appointmentId" path="appointmentId" />
+<form:form action="${createappntURL}" method="POST" cssClass="form-horizontal">
 
     <div class="control-group">
         <label class="control-label" for="empName">Emp Name</label>

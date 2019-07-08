@@ -8,3 +8,4 @@ Export-Package: ru.alexdern.liferay.security.constants
 -plugin.resourcebundle: com.liferay.ant.bnd.resource.bundle.ResourceBundleLoaderAnalyzerPlugin
 -plugin.sass: com.liferay.ant.bnd.sass.SassAnalyzerPlugin
 -sass: *
+-metatype: *

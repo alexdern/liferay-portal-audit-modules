@@ -1,79 +1,122 @@
 package ru.alexdern.liferay.security.portlet;
 
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
+import javax.portlet.*;
 
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ReleaseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
-import retrofit2.Response;
-import ru.alexdern.liferay.security.api.dto.EventDto;
-import ru.alexdern.liferay.security.model.SearchForm;
+import ru.alexdern.liferay.security.api.dto.UserDto;
+import ru.alexdern.liferay.security.model.Search;
 import ru.alexdern.liferay.security.model.User;
-import ru.alexdern.liferay.security.api.RestClient;
+
+import ru.alexdern.liferay.security.service.AuditService;
+import ru.alexdern.liferay.security.service.UserService;
 import ru.alexdern.liferay.security.util.LiferayUtil;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author AlexDern
  */
-@Controller
-@RequestMapping("VIEW")
+@Controller("search")
+@RequestMapping("EDIT")
+@SessionAttributes("search")
 public class AuditJournalSpringPortletViewController {
 
 	public static final String DEFAULT_VIEW = "view";
 	public static final String ALTERNATIVE_VIEW = "alternativeView";
 
+	private static final Log LOGGER = LogFactoryUtil.getLog(AuditJournalSpringPortletViewController.class);
+
+	/*
+    @Autowired
+    private LocalValidatorFactoryBean localValidatorFactoryBean;
+    */
 
 	@Autowired
-	private RestClient rest;
+	private AuditService auditService;
+
+	@Autowired
+	private UserService userService;
 
 
+    @ModelAttribute("myConfigFieldPortletPreference")
+    public String getPortletPreference(PortletRequest portletRequest) {
+        PortletPreferences portletPreferences = portletRequest.getPreferences();
+        return portletPreferences.getValue("myConfigField", "Not set");
+    }
+
+    @ModelAttribute("search")
+    public Search populateRecord() {
+        return new Search();
+    }
+
+    /** default renderer **/
 	@RenderMapping
-	public ModelAndView view(RenderRequest request, RenderResponse response) {
+	public String view(Model model, @ModelAttribute("search") Search search, RenderRequest request, RenderResponse response) {
+
+        PortletPreferences portletPreferences = request.getPreferences();
+
+
 		System.out.println("Default View");
-        ModelAndView model = new ModelAndView(DEFAULT_VIEW);
-        model.addObject("releaseInfo", ReleaseInfo.getReleaseInfo());
-        model.addObject("searchFormModel", new SearchForm());
+		search.setQuery("TEST");
+		model.addAttribute("search", search);
 
-        Map<String, String> userList = new HashMap<>();
-        userList.put("A", "alex");
-        userList.put("D", "denis");
-        userList.put("P", "pavel");
-        model.addObject("userList", userList);
+        // Current user
+        User user = LiferayUtil.getCurrentUser(request);
+        model.addAttribute("user", user);
+
+        // ReleaseInfo
+        model.addAttribute("releaseInfo", ReleaseInfo.getReleaseInfo());
 
 
-
-        List<EventDto> journal;
         try {
-            Response<List<EventDto>> rs = rest.rsAudit().getAll().execute();
-            System.out.println("RS = " + rs.toString());
-            journal = rs.body();
-            System.out.println(journal);
-            model.addObject("journal", journal.subList(0, 5));
+
+            Map<Long,String> userList = userService.getAll()
+                    .stream()
+                    .collect(Collectors.toMap(UserDto::getUserID,UserDto::getLogin));
+            model.addAttribute("userList", userList);
+
+            model.addAttribute("journal", auditService.getAll());
+
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn("API request failed.", e);
         }
 
-
-        User user = LiferayUtil.getCurrentUser(request);
-		model.addObject("user", user);
-		return model;
+		return DEFAULT_VIEW;
 	}
 
-	@RenderMapping(params = "render=alternative-view")
+    @ActionMapping(params = "action=actionSearch")
+    public void actionSearch(Model model, @ModelAttribute("search") Search search, BindingResult bindingResult,
+                             ActionRequest request,
+                             ActionResponse response,
+                             SessionStatus sessionStatus) {
+        //localValidatorFactoryBean.validate(search, bindingResult);
+        System.out.println("Action search; hasErrors: " + bindingResult.hasErrors());
+
+        System.out.println(search);
+        model.addAttribute("search", search);
+        response.setRenderParameter("action", "view");
+        sessionStatus.setComplete();
+    }
+
+
+    @RenderMapping(params = "render=alternative-view")
 	public String alternativeView() {
 		System.out.println("Alternative view");
 		return ALTERNATIVE_VIEW;
@@ -96,7 +139,7 @@ public class AuditJournalSpringPortletViewController {
     @ActionMapping
     public void createEmp(ActionRequest req, ActionResponse res) {
         String name = req.getParameter("name");
-        System.out.println("name----------- " + name);
+        System.out.println("--- name -----------> " + name);
     }
 
 	@ActionMapping(params = "action=action-one")
