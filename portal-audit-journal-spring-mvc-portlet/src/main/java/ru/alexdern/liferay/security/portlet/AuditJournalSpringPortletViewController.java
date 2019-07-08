@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * @author AlexDern
  */
 @Controller("search")
-@RequestMapping("EDIT")
+@RequestMapping("VIEW")
 @SessionAttributes("search")
 public class AuditJournalSpringPortletViewController {
 

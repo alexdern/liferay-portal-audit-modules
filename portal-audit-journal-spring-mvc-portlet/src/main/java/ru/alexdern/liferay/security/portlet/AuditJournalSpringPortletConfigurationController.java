@@ -10,6 +10,7 @@ public class AuditJournalSpringPortletConfigurationController extends DefaultCon
     @Override
     public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException {
 
+        /*
         PortletPreferences portletPreferences = renderRequest.getPreferences();
 
         // Get the actual configuration
@@ -17,6 +18,7 @@ public class AuditJournalSpringPortletConfigurationController extends DefaultCon
 
         // Set variables into the request
         renderRequest.setAttribute("myConfigField", myConfigField);
+        */
 
         super.render(renderRequest, renderResponse);
     }
