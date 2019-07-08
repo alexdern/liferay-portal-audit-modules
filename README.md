@@ -5,10 +5,10 @@
 > portal-audit-rest-transport
 Необходимо произвести настройку в ControlPanel - System Settings - Audit -  REST Transport Audit Message Processor
 
-**Портлеты: **
+**Портлеты:**
 > portal-audit-journal-mvc-portlet
 > portal-audit-journal-spring-mvc-portlet
-Портлеты к сожалению не смог закончить.
+Портлеты к сожалению не смог закончить, в грязном варианте.
 
 Необязательный модуль, пробовал сделать OSGi Uber Module
 Для библиотек okhttp и retrofit.
